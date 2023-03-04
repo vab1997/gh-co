@@ -1,8 +1,9 @@
 import { COMMIT_TYPES } from './commit-types.js'
 import { getChangedFiles, getStagedFiles, gitAdd, gitCommit } from './git.js'
-import { intro, outro, select, text, confirm, multiselect } from '@clack/prompts'
+import { intro, outro, select, text, confirm, multiselect, isCancel } from '@clack/prompts'
 import { trytm } from '@bdsqqq/try'
 import colors from 'picocolors'
+import { exitProgram } from './utils.js'
 
 const messageIntro = colors.yellow(' Asistant create commit 🔩 ')
 intro(colors.inverse(messageIntro))
@@ -25,6 +26,8 @@ if (stagedFiles.length === 0 && changedFiles.length > 0) {
     }))
   })
 
+  if (isCancel(files)) exitProgram()
+
   await gitAdd({ files })
 }
 
@@ -35,6 +38,8 @@ const commitType = await select({
     label: description
   }))
 })
+
+if (isCancel(commitType)) exitProgram()
 
 const { description } = COMMIT_TYPES[commitType]
 const isRelease = description.startsWith('release')
@@ -52,6 +57,8 @@ const commitMessage = await text({
   }
 })
 
+if (isCancel(commitMessage)) exitProgram()
+
 let commit = `${commitType}: ${commitMessage}`
 commit = breakingChange ? `[Breaking change] ${commit}` : commit
 
@@ -62,6 +69,8 @@ const shouldContinue = await confirm({
   
   ${colors.cyan('confirm?')}`
 })
+
+if (isCancel(shouldContinue)) exitProgram()
 
 if (!shouldContinue) {
   outro('Commit canceled')

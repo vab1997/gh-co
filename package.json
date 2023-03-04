@@ -1,17 +1,17 @@
 {
-  "name": "co",
-  "version": "1.0.0",
+  "name": "gh-co",
+  "version": "1.0.1",
   "description": "CLI for create commits easier",
   "main": "index.js",
   "type": "module",
   "bin": {
-    "co": "./src/index.js"
+    "co": "./src/bin.js"
   },
   "scripts": {
     "co": "co"
   },
   "keywords": [],
-  "author": "",
+  "author": "Victor Bejas",
   "license": "ISC",
   "devDependencies": {
     "co": "file://.",
